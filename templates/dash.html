@@ -19,27 +19,30 @@
         <div>
             <h1>Dashboard</h1>
             
-            <a href='/logout'>Logout</a>
+            
 
         </div>
         <div>
-            <a>{{ email }}</a>
-            <a>{{ string }}</a>
+            <h4>Logged in as {{ username }}</h4>
+            <a href='/logout'>Logout</a>
         </div>
         
-        <div>
+        <div class="playback">
             <h2>Currently Playing</h2>
+            <h3>{{ playbackStatus[0] }}</h3>
+            <p>{{ playbackStatus[1] }}</p>
+
         </div>
 
 
 
         <h2>My Playlists</h2>
         
-
+        
         <div id="playlist" class="playlist" data-playlist = "{{ playlists }}">
 
 
-
+            
             <script>
                 const playlists = JSON.parse(document.getElementById("playlist").getAttribute("data-playlist"));
                 
@@ -86,6 +89,49 @@
            
         </div>
        
+        
+        
+        <div id="embed-iframe" class="embed-iframe"></div>
+        <script src="https://open.spotify.com/embed-podcast/iframe-api/v1" async></script>
+        <script type="text/javascript">
+        window.onSpotifyIframeApiReady = (IFrameAPI) => {
+            const element = document.getElementById('embed-iframe');
+            const options = {
+            width: '500',
+            height: '200',
+            uri: 'spotify:episode:7makk4oTQel546B0PZlDM5'
+            };
+            
+            let callback = (EmbedController) => {
+            // This function will be called when the controller is ready.
+
+            // Load the specified URI
+            EmbedController.loadUri(options.uri);
+
+            // Play the episode
+            EmbedController.play();
+
+            // You can add more logic here if needed.
+
+            // Example: To destroy the controller after a certain duration (e.g., 10 seconds)
+            setTimeout(() => {
+                EmbedController.destroy();
+            }, 10000); // 10000 milliseconds = 10 seconds
+            };
+
+            IFrameAPI.createController(element, options, callback);
+        };
+        </script>
+
+
+
+
+        
+
+
+
+
+
     </body>
 </html>
 

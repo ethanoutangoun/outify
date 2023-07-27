@@ -7,4 +7,17 @@
    
 }
 
+.playback{
+    padding: 5px;
+    height: 125px;
+
+}
+
+.playlist{
+    height: 350px;
+    overflow: auto;
+    
+   
+}
+
 

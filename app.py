@@ -69,17 +69,34 @@ def getCurrentlyPlaying(token):
     url = "https://api.spotify.com/v1/me/player/currently-playing"
     headers = get_auth_header(token)
     result = get(url,  headers=headers)
-    print("res: ", result.status_code)
+    
+    #String to display track info
+    output_string = ""
     
     #valid response
     if result.status_code == 200:
         json_result = json.loads(result.content)['item']
         artists = list(map(lambda x:x['name'], json_result['artists']))
-        print([json_result['name'], artists])
+        artist_string = ""
+
+        for x, artist in enumerate(artists):
+            if x!= len(artists)-1:
+                artist_string+=artist + ", "
+            else:
+                artist_string+=artist 
+
+        output_string = ([json_result['name'], artist_string])
+        
+
+
 
     #invalid response
     else:
-        print("No song currently playing")
+        output_string = ["No Song Currently Playing", ""]
+
+    return output_string
+
+    
 
 
 
@@ -162,9 +179,12 @@ def user():
 
     user_info = user_info_response.json()
     
-    getCurrentlyPlaying(session['access_token'])
     
-    return render_template("dash.html",string = f"Your username is: {user_info['display_name']}.",email = user_info['email'], playlists = json.dumps(getPlayLists(session['access_token'])))
+    
+    return render_template("dash.html",username = f"{user_info['display_name']}",
+                           email = user_info['email'], playlists = json.dumps(getPlayLists(session['access_token'])),
+                           playbackStatus = getCurrentlyPlaying(session['access_token']),
+                           access_token = session['access_token'])
 
 
 if __name__ == '__main__':
