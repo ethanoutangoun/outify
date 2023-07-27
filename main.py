@@ -41,9 +41,9 @@ def main():
 
     
     temp = sp.current_user_recently_played(limit=50, after=None, before=None)
-    print(temp)
+    #print(temp['name'])
 
-
+    print(temp['items'])
 
 
 

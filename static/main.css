@@ -1,0 +1,7 @@
+/* Import the Satoshi font from Google Fonts */
+@import url('https://fonts.googleapis.com/css2?family=Satoshi&display=swap');
+
+/* Use Satoshi font for the body element */
+body {
+    font-family: 'Satoshi', sans-serif;
+}

@@ -1,0 +1,91 @@
+
+<html>
+    <head>
+        <title>Outify</title>
+        <link rel="stylesheet" href="/static/dash.css">
+        <!-- Include the Satoshi font from Google Fonts -->
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Satoshi&display=swap">
+        <style>
+            body {
+                font-family: 'Satoshi', sans-serif; /* Use Satoshi font for the body */
+            }
+
+            /* Add other CSS styles using the Satoshi font here */
+        </style>
+        
+    </head>
+
+    <body>
+        <div>
+            <h1>Dashboard</h1>
+            
+            <a href='/logout'>Logout</a>
+
+        </div>
+        <div>
+            <a>{{ email }}</a>
+            <a>{{ string }}</a>
+        </div>
+        
+        <div>
+            <h2>Currently Playing</h2>
+        </div>
+
+
+
+        <h2>My Playlists</h2>
+        
+
+        <div id="playlist" class="playlist" data-playlist = "{{ playlists }}">
+
+
+
+            <script>
+                const playlists = JSON.parse(document.getElementById("playlist").getAttribute("data-playlist"));
+                
+                console.log(playlists);
+                function createSongElement(name, imageUrl) {
+                    const songDiv = document.createElement('div');
+                    songDiv.classList.add('song');
+
+                    const img = document.createElement('img');
+                    //img.classList.add('song');
+                    img.src = imageUrl;
+                    img.height = 50;
+                    img.width = 50;
+
+                    const h3 = document.createElement('h3');
+                    //h3.classList.add('song');
+                    h3.textContent = name;
+
+                    songDiv.appendChild(img);
+                    songDiv.appendChild(h3);
+
+                    return songDiv;
+                }
+
+                // Function to render all the songs
+                function renderSongs() {
+                    const playlistContainer = document.getElementById('playlist');
+
+                    // Clear any existing content in the container
+                    playlistContainer.innerHTML = '';
+
+                    // Iterate through the playlists data and create elements
+                    playlists.forEach(songData => {
+                        const songElement = createSongElement(songData[0], songData[1]);
+                        playlistContainer.appendChild(songElement);
+                    });
+                }
+
+                // Call the renderSongs function to render the initial data
+                renderSongs();
+            </script>
+
+
+           
+        </div>
+       
+    </body>
+</html>
+
