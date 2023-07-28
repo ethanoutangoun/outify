@@ -1,4 +1,4 @@
-from flask import Flask, request, redirect, session, render_template
+from flask import Flask, request, redirect, session, render_template, jsonify
 import random
 import requests
 from requests import post,get
@@ -57,11 +57,14 @@ def listSongs(name):
 
 
 def getPlayLists(token):
-    url = "https://api.spotify.com/v1/me/playlists?limit=5"
+    
+    url = "https://api.spotify.com/v1/me/playlists?"
     headers = get_auth_header(token)
     result = get(url,headers=headers)
     json_result = json.loads(result.content)['items']
     playlists = list(map(lambda x:[x['name'], x['images'][0]["url"]], json_result))
+    
+  
     return playlists
 
 
@@ -76,6 +79,10 @@ def getCurrentlyPlaying(token):
     #valid response
     if result.status_code == 200:
         json_result = json.loads(result.content)['item']
+        
+        image_url = json_result['album']['images'][0]['url']
+
+        #Get list of contributing artist
         artists = list(map(lambda x:x['name'], json_result['artists']))
         artist_string = ""
 
@@ -85,14 +92,14 @@ def getCurrentlyPlaying(token):
             else:
                 artist_string+=artist 
 
-        output_string = ([json_result['name'], artist_string])
+        output_string = ([json_result['name'], artist_string, image_url])
         
-
+       
 
 
     #invalid response
     else:
-        output_string = ["No Song Currently Playing", ""]
+        output_string = ["No Song Currently Playing", "",""]
 
     return output_string
 
@@ -174,8 +181,11 @@ def user():
         'Authorization': f'Bearer {session["access_token"]}'
     }
     user_info_response = requests.get('https://api.spotify.com/v1/me', headers=headers)
-     # If the access token is invalid, clear the session and redirect to the login page
-
+    
+    # If the access token is invalid, clear the session and redirect to the login page
+    if user_info_response.status_code == 401:  # Unauthorized
+        session.clear()
+        return redirect('/')
 
     user_info = user_info_response.json()
     
@@ -185,6 +195,25 @@ def user():
                            email = user_info['email'], playlists = json.dumps(getPlayLists(session['access_token'])),
                            playbackStatus = getCurrentlyPlaying(session['access_token']),
                            access_token = session['access_token'])
+
+
+
+@app.route('/get_current_song')
+def get_current_song():
+    access_token = session.get('access_token')
+    if access_token:
+        headers = {
+            'Authorization': f'Bearer {access_token}'
+        }
+        response = requests.get('https://api.spotify.com/v1/me/player/currently-playing', headers=headers)
+        if response.status_code == 200:
+            data = response.json()
+            if data.get('is_playing'):
+            
+                return jsonify(data['item'])  # Return the current song data
+ 
+    return jsonify({})  # If no song is playing or error occurred, return an empty object
+
 
 
 if __name__ == '__main__':

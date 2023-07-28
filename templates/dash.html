@@ -16,113 +16,126 @@
     </head>
 
     <body>
-        <div>
-            <h1>Dashboard</h1>
-            
-            
-
-        </div>
-        <div>
-            <h4>Logged in as {{ username }}</h4>
-            <a href='/logout'>Logout</a>
-        </div>
-        
-        <div class="playback">
-            <h2>Currently Playing</h2>
-            <h3>{{ playbackStatus[0] }}</h3>
-            <p>{{ playbackStatus[1] }}</p>
-
-        </div>
-
-
-
-        <h2>My Playlists</h2>
-        
-        
-        <div id="playlist" class="playlist" data-playlist = "{{ playlists }}">
-
-
-            
-            <script>
-                const playlists = JSON.parse(document.getElementById("playlist").getAttribute("data-playlist"));
+        <div class="grid">
+            <div class="col">
+            <div>
+                <h1>Dashboard</h1>
                 
-                console.log(playlists);
-                function createSongElement(name, imageUrl) {
-                    const songDiv = document.createElement('div');
-                    songDiv.classList.add('song');
+                
 
-                    const img = document.createElement('img');
-                    //img.classList.add('song');
-                    img.src = imageUrl;
-                    img.height = 50;
-                    img.width = 50;
-
-                    const h3 = document.createElement('h3');
-                    //h3.classList.add('song');
-                    h3.textContent = name;
-
-                    songDiv.appendChild(img);
-                    songDiv.appendChild(h3);
-
-                    return songDiv;
-                }
-
-                // Function to render all the songs
-                function renderSongs() {
-                    const playlistContainer = document.getElementById('playlist');
-
-                    // Clear any existing content in the container
-                    playlistContainer.innerHTML = '';
-
-                    // Iterate through the playlists data and create elements
-                    playlists.forEach(songData => {
-                        const songElement = createSongElement(songData[0], songData[1]);
-                        playlistContainer.appendChild(songElement);
-                    });
-                }
-
-                // Call the renderSongs function to render the initial data
-                renderSongs();
-            </script>
-
-
-           
-        </div>
-       
-        
-        
-        <div id="embed-iframe" class="embed-iframe"></div>
-        <script src="https://open.spotify.com/embed-podcast/iframe-api/v1" async></script>
-        <script type="text/javascript">
-        window.onSpotifyIframeApiReady = (IFrameAPI) => {
-            const element = document.getElementById('embed-iframe');
-            const options = {
-            width: '500',
-            height: '200',
-            uri: 'spotify:episode:7makk4oTQel546B0PZlDM5'
-            };
+            </div>
+            <div>
+                <h4>Logged in as {{ username }}</h4>
+                <a href='/logout'>Logout</a>
+            </div>
             
-            let callback = (EmbedController) => {
-            // This function will be called when the controller is ready.
+            <h2>Currently Playing</h2>
 
-            // Load the specified URI
-            EmbedController.loadUri(options.uri);
 
-            // Play the episode
-            EmbedController.play();
 
-            // You can add more logic here if needed.
+            
+              
 
-            // Example: To destroy the controller after a certain duration (e.g., 10 seconds)
-            setTimeout(() => {
-                EmbedController.destroy();
-            }, 10000); // 10000 milliseconds = 10 seconds
-            };
 
-            IFrameAPI.createController(element, options, callback);
-        };
-        </script>
+            <div class="playback" id = "playback-info">
+                <script>
+                    //Async function to update current song playing
+                    
+                    function updateCurrentSong() {
+                      fetch('/get_current_song')
+                        .then(response => response.json())
+                        .then(data => {
+                          const playbackDiv = document.getElementById('playback-info');
+                          if (Object.keys(data).length > 0) {
+                            // Update the HTML elements with the current song information
+                            playbackDiv.querySelector('img').src = data.album.images[0].url;
+                            playbackDiv.querySelector('h3').innerText = data.name;
+                            playbackDiv.querySelector('p').innerText = data.artists[0].name;
+                          } else {
+                            // If no song is playing, show a default message
+                            playbackDiv.querySelector('img').src = ''; // Set a default image or hide the image
+                            playbackDiv.querySelector('h3').innerText = 'No song is currently playing.';
+                            playbackDiv.querySelector('p').innerText = '';
+                          }
+                        })
+                        .catch(error => console.error('Error fetching current song:', error));
+                    }
+                  
+                    // Refresh the current song information every 3 seconds
+                    setInterval(updateCurrentSong, 3000);
+                    
+                </script>
+                
+                <img src="{{ playbackStatus[2] }}" width="75px" height="75px">
+                <div>
+                    <h3>{{ playbackStatus[0] }}</h3>
+                    <p>{{ playbackStatus[1] }}</p>
 
+                </div>
+
+            </div>
+
+
+
+            <h2>My Playlists</h2>
+            
+            
+            <div id="playlist" class="playlist" data-playlist = "{{ playlists }}">
+
+
+                
+                <script>
+                    const playlists = JSON.parse(document.getElementById("playlist").getAttribute("data-playlist"));
+                    
+                    console.log(playlists);
+                    function createSongElement(name, imageUrl) {
+                        const songDiv = document.createElement('div');
+                        songDiv.classList.add('song');
+
+                        const img = document.createElement('img');
+                        //img.classList.add('song');
+                        img.src = imageUrl;
+                        img.height = 50;
+                        img.width = 50;
+
+                        const h3 = document.createElement('h3');
+                        //h3.classList.add('song');
+                        h3.textContent = name;
+
+                        songDiv.appendChild(img);
+                        songDiv.appendChild(h3);
+
+                        return songDiv;
+                    }
+
+                    // Function to render all the songs
+                    function renderSongs() {
+                        const playlistContainer = document.getElementById('playlist');
+
+                        // Clear any existing content in the container
+                        playlistContainer.innerHTML = '';
+
+                        // Iterate through the playlists data and create elements
+                        playlists.forEach(songData => {
+                            const songElement = createSongElement(songData[0], songData[1]);
+                            playlistContainer.appendChild(songElement);
+                        });
+                    }
+
+                    // Call the renderSongs function to render the initial data
+                    renderSongs();
+                </script>
+
+
+            
+            </div>
+        
+            
+            </div>
+        
+            <div class="col">
+                <h1>Generate Playlist</h1>
+            </div>
 
 
 
@@ -131,7 +144,7 @@
 
 
 
-
+    </div>
     </body>
 </html>
 
