@@ -62,6 +62,7 @@ def getPlayLists(token):
     headers = get_auth_header(token)
     result = get(url,headers=headers)
     json_result = json.loads(result.content)['items']
+
     playlists = list(map(lambda x:[x['name'], x['images'][0]["url"]], json_result))
     
   
@@ -80,7 +81,8 @@ def getCurrentlyPlaying(token):
     if result.status_code == 200:
         json_result = json.loads(result.content)['item']
         
-        image_url = json_result['album']['images'][0]['url']
+        #Change the value of the index to control image size
+        image_url = json_result['album']['images'][1]['url']
 
         #Get list of contributing artist
         artists = list(map(lambda x:x['name'], json_result['artists']))
@@ -104,6 +106,17 @@ def getCurrentlyPlaying(token):
     return output_string
 
     
+
+
+def getUserTopTracks(token, limit):
+    url = f'https://api.spotify.com/v1/me/top/tracks?time_range=short_term&limit={limit}'
+    headers = get_auth_header(token)
+    result = get(url,  headers=headers)
+    json_result = json.loads(result.content)['items'][4]['name']
+    print(json.dumps(json_result, indent=1))
+
+
+
 
 
 
@@ -169,6 +182,24 @@ def logout():
     session.clear()
     return redirect('/')
 
+@app.route('/get_current_song')
+def get_current_song():
+    access_token = session.get('access_token')
+    if access_token:
+        headers = {
+            'Authorization': f'Bearer {access_token}'
+        }
+        response = requests.get('https://api.spotify.com/v1/me/player/currently-playing', headers=headers)
+        if response.status_code == 200:
+            data = response.json()
+            if data.get('is_playing'):
+            
+                return jsonify(data['item'])  # Return the current song data
+ 
+    return jsonify({})  # If no song is playing or error occurred, return an empty object
+
+
+
 @app.route('/user')
 def user():
     if 'access_token' not in session:
@@ -189,6 +220,7 @@ def user():
 
     user_info = user_info_response.json()
     
+    getUserTopTracks(session['access_token'], 5)
     
     
     return render_template("dash.html",username = f"{user_info['display_name']}",
@@ -197,22 +229,6 @@ def user():
                            access_token = session['access_token'])
 
 
-
-@app.route('/get_current_song')
-def get_current_song():
-    access_token = session.get('access_token')
-    if access_token:
-        headers = {
-            'Authorization': f'Bearer {access_token}'
-        }
-        response = requests.get('https://api.spotify.com/v1/me/player/currently-playing', headers=headers)
-        if response.status_code == 200:
-            data = response.json()
-            if data.get('is_playing'):
-            
-                return jsonify(data['item'])  # Return the current song data
- 
-    return jsonify({})  # If no song is playing or error occurred, return an empty object
 
 
 

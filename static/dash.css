@@ -19,6 +19,8 @@
 
 }
 
+
+
 .playlist{
     height: 320px;
     overflow: auto;
@@ -28,11 +30,27 @@
 
 .grid{
     display: grid;
-    grid-template-columns: 350px 1fr;
-  
+    grid-template-columns: 400px 1fr;
+    height: 100%;
   
 }
 
+.col{
 
+    border-right: 1px solid black;
+}
 
+.col:last-child{
+    border-right: none;
+}
 
+/* This is to enable later when fully customizing spacing, now will leave it alone cause it looks better
+body{
+    margin: 0;
+}
+
+h1{
+    margin: 0;
+}
+
+*/
