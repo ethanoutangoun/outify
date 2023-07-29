@@ -112,8 +112,40 @@ def getUserTopTracks(token, limit):
     url = f'https://api.spotify.com/v1/me/top/tracks?time_range=short_term&limit={limit}'
     headers = get_auth_header(token)
     result = get(url,  headers=headers)
-    json_result = json.loads(result.content)['items'][4]['name']
-    print(json.dumps(json_result, indent=1))
+    json_result = json.loads(result.content)['items']
+
+    track_ids = []
+    for i in range(0, limit):
+        track_ids.append(json_result[i]['id'])
+
+
+    print(track_ids)
+    return track_ids
+
+
+
+def getUserRecs(token,track_ids):
+  
+    s= ""
+    for x, id in enumerate(track_ids):
+        if x!=len(track_ids)-1:
+            s+= id +","
+        else:
+            s+=id
+
+    
+
+    url = f'https://api.spotify.com/v1/recommendations?limit=5&seed_genres=k-pop&seed_tracks={s}'
+    print(url)
+    headers = get_auth_header(token)
+    result = get(url,  headers=headers)
+    json_result = json.loads(result.content)['tracks']
+
+    recs = (list(map(lambda x: [x['name'], x['artists'][0]['name'], x['album']['images'][0]['url'], x['uri']], json_result)))
+  
+
+    return recs
+
 
 
 
@@ -220,13 +252,15 @@ def user():
 
     user_info = user_info_response.json()
     
-    getUserTopTracks(session['access_token'], 5)
-    
+    #Get recs from user top 4 
+    track_ids = getUserTopTracks(session['access_token'], 4)
+    recs = getUserRecs(session['access_token'], track_ids)
     
     return render_template("dash.html",username = f"{user_info['display_name']}",
                            email = user_info['email'], playlists = json.dumps(getPlayLists(session['access_token'])),
                            playbackStatus = getCurrentlyPlaying(session['access_token']),
-                           access_token = session['access_token'])
+                           access_token = session['access_token'],
+                           recs = recs)
 
 
 
