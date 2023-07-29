@@ -17,6 +17,7 @@ numpy==1.25.0
 opencv-python==4.8.0.74
 opencv-python-headless==4.8.0.74
 protobuf==4.23.3
+python-dotenv==1.0.0
 requests==2.31.0
 urllib3==2.0.3
 Werkzeug==2.3.6
