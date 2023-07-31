@@ -130,7 +130,8 @@ def getUserTopTracks(token, term, limit):
     return track_ids
 
 
-
+#Input: token, list of track ids
+#Output: list of list [name, artist, album image, uri]
 def getUserRecs(token,track_ids):
   
     s= ""
@@ -139,8 +140,6 @@ def getUserRecs(token,track_ids):
             s+= id +","
         else:
             s+=id
-
-    
 
     url = f'https://api.spotify.com/v1/recommendations?limit=5&seed_genres=k-pop&seed_tracks={s}'
     headers = get_auth_header(token)
@@ -153,6 +152,28 @@ def getUserRecs(token,track_ids):
     return recs
 
 
+#Return : List of ID's
+def getTopTrackURI(token, term, limit):
+
+    t = ""
+    if term == 0:
+        t = "short_term"
+    if term == 1:
+        t = "medium_term"
+    if term == 2:
+        t = "long_term"
+
+    url = f'https://api.spotify.com/v1/me/top/tracks?time_range={t}&limit={limit}'
+    headers = get_auth_header(token)
+    result = get(url,  headers=headers)
+    json_result = json.loads(result.content)['items']
+
+    track_uris = []
+    for i in range(0, limit):
+        track_uris.append(json_result[i]['uri'])
+
+
+    return track_uris
 
 
 
@@ -160,6 +181,11 @@ def getUserRecs(token,track_ids):
 
 
 
+
+
+########
+#ROUTES#
+########
 
 
 # Step 1: Get the authorization URL
@@ -263,6 +289,9 @@ def user():
     #Get recs from user top 4 (short_term)
     track_ids = getUserTopTracks(token,0, 4)
     recs = getUserRecs(token, track_ids)
+
+
+   
     
     return render_template("dash.html",username = f"{user_info['display_name']}",
                            email = user_info['email'], playlists = json.dumps(getPlayLists(token)),
