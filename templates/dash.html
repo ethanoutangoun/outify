@@ -89,8 +89,7 @@
                 
                 <script>
                     const playlists = JSON.parse(document.getElementById("playlist").getAttribute("data-playlist"));
-                    
-                    console.log(playlists);
+          
                     function createSongElement(name, imageUrl) {
                         const songDiv = document.createElement('div');
                         songDiv.classList.add('song');
@@ -146,8 +145,7 @@
                 <script type="text/javascript">
                   const link = document.getElementById("embed-iframe").getAttribute("uri").toString().trim();
                   
-                    console.log(link)
-                    console.log("Hello")
+        
 
                   window.onSpotifyIframeApiReady = (IFrameAPI) => {
                     const element = document.getElementById('embed-iframe');

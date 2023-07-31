@@ -143,7 +143,6 @@ def getUserRecs(token,track_ids):
     
 
     url = f'https://api.spotify.com/v1/recommendations?limit=5&seed_genres=k-pop&seed_tracks={s}'
-    print(url)
     headers = get_auth_header(token)
     result = get(url,  headers=headers)
     json_result = json.loads(result.content)['tracks']
