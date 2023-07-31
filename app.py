@@ -16,7 +16,7 @@ app.secret_key = str(random.randint(0,10000000))
 client_id = os.getenv("SPOTIPY_CLIENT_ID")
 client_secret = os.getenv("SPOTIPY_CLIENT_SECRET")
 redirect_uri = os.getenv("SPOTIPY_REDIRECT_URI")
-scope = 'user-read-private user-top-read user-read-email playlist-read-private user-read-currently-playing'
+scope = 'user-read-private user-top-read user-read-email playlist-read-private user-read-currently-playing user-read-playback-state streaming user-modify-playback-state'
 
 
 #User functions
@@ -108,8 +108,17 @@ def getCurrentlyPlaying(token):
     
 
 
-def getUserTopTracks(token, limit):
-    url = f'https://api.spotify.com/v1/me/top/tracks?time_range=short_term&limit={limit}'
+def getUserTopTracks(token, term, limit):
+
+    t = ""
+    if term == 0:
+        t = "short_term"
+    if term == 1:
+        t = "medium_term"
+    if term == 2:
+        t = "long_term"
+
+    url = f'https://api.spotify.com/v1/me/top/tracks?time_range={t}&limit={limit}'
     headers = get_auth_header(token)
     result = get(url,  headers=headers)
     json_result = json.loads(result.content)['items']
@@ -252,8 +261,8 @@ def user():
 
     user_info = user_info_response.json()
     
-    #Get recs from user top 4 
-    track_ids = getUserTopTracks(session['access_token'], 4)
+    #Get recs from user top 4 (short_term)
+    track_ids = getUserTopTracks(session['access_token'],0, 4)
     recs = getUserRecs(session['access_token'], track_ids)
     
     return render_template("dash.html",username = f"{user_info['display_name']}",

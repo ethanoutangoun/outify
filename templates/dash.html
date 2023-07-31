@@ -19,7 +19,7 @@
         <div class="grid">
             <div class="col">
             <div>
-                <h1>Dashboard</h1>
+                <h1>Home</h1>
                 
                 
 
@@ -168,10 +168,92 @@
                   };
                 </script>
                 </div>
-                
 
 
+                <!-- Web Playback SDK (Implement later)
+                <div id="web-sdk" access_token="{{ access_token | safe }}">
+                    <h1>Spotify Web Playback SDK Quick Start</h1>
+                    <button id="togglePlay">Toggle Play</button>
 
+                    <div id="trackInfo">
+                      <p id="trackName">Track Name: N/A</p>
+                      <p id="artist">Artist: N/A</p>
+                      <p id="album">Album: N/A</p>
+                    </div>
+
+                    <script src="https://sdk.scdn.co/spotify-player.js"></script>
+                    <script>
+                      window.onSpotifyWebPlaybackSDKReady = () => {
+                        const token = document.getElementById("web-sdk").getAttribute("access_token")
+                          
+                        const player = new Spotify.Player({
+                          name: 'Web Playback SDK Quick Start Player',
+                          getOAuthToken: (cb) => {
+                            cb(token);
+                          },
+                          volume: 0.5,
+                        });
+
+                        const updateTrackInfo = (track) => {
+                          const trackName = document.getElementById('trackName');
+                          const artist = document.getElementById('artist');
+                          const album = document.getElementById('album');
+
+                          trackName.textContent = `Track Name: ${track.name}`;
+                          artist.textContent = `Artist: ${track.artists[0].name}`;
+                          album.textContent = `Album: ${track.album.name}`;
+                        };
+
+                        player.addListener('ready', ({ device_id }) => {
+                          console.log('Ready with Device ID', device_id);
+                        });
+
+                        player.addListener('initialization_error', ({ message }) => {
+                          console.error(message);
+                        });
+
+                        player.addListener('authentication_error', ({ message }) => {
+                          console.error(message);
+                        });
+
+                        player.addListener('account_error', ({ message }) => {
+                          console.error(message);
+                        });
+
+                        player.addListener('player_state_changed', (state) => {
+                          // 'state' contains the current player state
+                          const { track_window } = state;
+                          const currentTrack = track_window.current_track;
+                          console.log('Current Track:', currentTrack);
+                          updateTrackInfo(currentTrack);
+                        });
+
+                        document.getElementById('togglePlay').onclick = function () {
+                          player.getCurrentState().then(state => {
+                        if (!state) {
+                          console.error('User is not playing music through the Web Playback SDK');
+                          return;
+                        }
+
+                        var current_track = state.track_window.current_track;
+                        var next_track = state.track_window.next_tracks[0];
+
+                        console.log('Currently Playing', current_track);
+                        console.log('Playing Next', next_track);
+                      });
+                        };
+
+                        
+
+                        player.connect().then((success) => {
+                          if (success) {
+                            console.log('The Web Playback SDK successfully connected to Spotify!');
+                          }
+                        });
+                      };
+                    </script>
+                </div>
+                -->
 
 
 
