@@ -47,9 +47,8 @@ def get_songs_by_artist(token, artist_id):
     return json_result
 
 
-#Outputs a list of songs
-def listSongs(name):
-    token = session['access_token']
+#Outputs top songs of artist
+def listSongs(token, name):
     artist_id = search_for_artist(token, name)['id'] #Get Id of artist based on name
     top_tracks = get_songs_by_artist(token, artist_id)
     return list(map(lambda x:x['name'], top_tracks))
@@ -107,7 +106,7 @@ def getCurrentlyPlaying(token):
 
     
 
-
+#Return : List of ID's
 def getUserTopTracks(token, term, limit):
 
     t = ""
@@ -128,7 +127,6 @@ def getUserTopTracks(token, term, limit):
         track_ids.append(json_result[i]['id'])
 
 
-    print(track_ids)
     return track_ids
 
 
@@ -247,6 +245,8 @@ def user():
         
         return redirect('/')
     
+
+    token = session['access_token']
    
     # Use the access token to get the user's information
     headers = {
@@ -262,13 +262,13 @@ def user():
     user_info = user_info_response.json()
     
     #Get recs from user top 4 (short_term)
-    track_ids = getUserTopTracks(session['access_token'],0, 4)
-    recs = getUserRecs(session['access_token'], track_ids)
+    track_ids = getUserTopTracks(token,0, 4)
+    recs = getUserRecs(token, track_ids)
     
     return render_template("dash.html",username = f"{user_info['display_name']}",
-                           email = user_info['email'], playlists = json.dumps(getPlayLists(session['access_token'])),
-                           playbackStatus = getCurrentlyPlaying(session['access_token']),
-                           access_token = session['access_token'],
+                           email = user_info['email'], playlists = json.dumps(getPlayLists(token)),
+                           playbackStatus = getCurrentlyPlaying(token),
+                           access_token = token,
                            recs = recs)
 
 
