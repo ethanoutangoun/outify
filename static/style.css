@@ -58,7 +58,7 @@ canvas{
 
 #overlay{
   position: relative;
-  top: 150px;
+  top: 120px;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -88,6 +88,8 @@ h1{
 .text-1{
   padding-top: 50px;
   text-align: center;
+  padding-left: 15px;
+  padding-right: 15px;
 }
 
 
@@ -97,6 +99,9 @@ h1{
   color: #6FE37A;
   font-size: 25px;
   font-weight: 100;
+  text-align: center;
+  padding-left: 15px;
+  padding-right: 15px;
 
 }
 
