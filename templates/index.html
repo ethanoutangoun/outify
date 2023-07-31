@@ -1,11 +1,14 @@
-
-<html>
-
-
-    <head>
-        <title>Welcome to Outify</title>
-        <!-- Include the Satoshi font from Google Fonts -->
-        <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Satoshi&display=swap">
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Welcome to Outify</title>
+  <meta name="description" content="particles.js is a lightweight JavaScript library for creating particles.">
+  <meta name="author" content="Vincent Garreau" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <link rel="stylesheet" media="screen" href="/static/style.css">
+  <link rel="icon" href="/static/favicon.ico" type="image/x-icon">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Satoshi&display=swap">
         <style>
             body {
                 font-family: 'Satoshi', sans-serif; /* Use Satoshi font for the body */
@@ -13,14 +16,50 @@
 
             /* Add other CSS styles using the Satoshi font here */
         </style>
-        <link rel="icon" href="/static/favicon.ico" type="image/x-icon">
-    </head>
-
-    <body>
-        <h1>Welcome to Outify</h1>
-        <a href="{{ auth_url }}">sign in</a>
-
-    </body>
+</head>
+<body>
 
 
+<!-- particles.js container -->
+<div id="particles-js">
+
+<!-- scripts -->
+<script src="/static/js/particles.js"></script>
+<script src="/static/js/app.js"></script>
+
+</div>
+
+<div id="overlay">
+    <div class="title-image">
+        <img src="/static/favicon.ico" width="70px" height="70px"/>
+        <h1>utify</h1>
+
+    </div>
+    <div class="text-1">
+        <h2>A fun way to discover music you actually enjoy.</h2>
+    </div>
+
+    <div class="text-2">
+        <h3>Connect with Spotify to get started</h3>
+    </div>
+
+
+    <div class="spotify-btn">
+
+
+        <a href="{{ auth_url }}">
+            <div class="btn-group">
+            <h4>Log in with Spotify</h4>
+            <img src="/static/spotify-logo-2.png" height="20px" width="20px"/>
+            </div>
+        </a>
+
+    </div>
+    
+    <div class="credits">
+        <p>Created by Ethan Outangoun</p>
+    </div>
+</div>
+
+</body>
 </html>

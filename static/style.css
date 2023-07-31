@@ -110,6 +110,9 @@ h1{
   display: flex;
   align-items: center;
   gap: 5px;
+  background-color: #6FE37A;
+  padding: 10px;
+  border-radius: 7px;
 }
 h4{
   font-size: 18px;
