@@ -16,7 +16,7 @@ app.secret_key = str(random.randint(0,10000000))
 client_id = os.getenv("SPOTIPY_CLIENT_ID")
 client_secret = os.getenv("SPOTIPY_CLIENT_SECRET")
 redirect_uri = os.getenv("SPOTIPY_REDIRECT_URI")
-scope = 'user-read-private user-top-read user-read-email playlist-read-private user-read-currently-playing user-read-playback-state streaming user-modify-playback-state'
+scope = 'user-read-private user-top-read user-read-email playlist-read-private playlist-modify-private user-read-currently-playing user-read-playback-state streaming user-modify-playback-state'
 
 
 #User functions
@@ -152,7 +152,7 @@ def getUserRecs(token,track_ids):
     return recs
 
 
-#Return : List of ID's
+#Get list of URI to put in a playlist
 def getTopTrackURI(token, term, limit):
 
     t = ""
@@ -176,6 +176,26 @@ def getTopTrackURI(token, term, limit):
     return track_uris
 
 
+
+def createPlaylists(token):
+
+    
+    headers = get_auth_header(token)
+    user_info_response = requests.get('https://api.spotify.com/v1/me', headers=headers)
+    user_id = user_info_response.json()['id']
+    create_playlist_url = f'https://api.spotify.com/v1/users/{user_id}/playlists'
+   
+    data = {
+        'name': "Outify Wrapped 2023",
+        'description': "Your top 50 songs of 2023",
+        'public': False
+    }
+   
+    response = requests.post(create_playlist_url, headers=headers, json=data)
+    if response.status_code == 201:
+        print("Yay")
+    else:
+        print("NO")
 
 
 
@@ -290,7 +310,7 @@ def user():
     track_ids = getUserTopTracks(token,0, 4)
     recs = getUserRecs(token, track_ids)
 
-
+    #createPlaylists(token)
    
     
     return render_template("dash.html",username = f"{user_info['display_name']}",
