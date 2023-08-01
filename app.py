@@ -313,6 +313,17 @@ def get_current_song():
     return jsonify({})  # If no song is playing or error occurred, return an empty object
 
 
+@app.route('/create_wrapped')
+def create_wrapped():
+    token = session.get('access_token')
+    if not token:
+        return jsonify({'message': 'Unauthorized'}), 401
+
+    playlist_id = createPlaylists(token)
+    topTracksURIS = getTopTrackURI(token, 1, 50)
+    addToPlaylist(token, topTracksURIS, playlist_id)
+    return jsonify({'message': 'Playlist creation initiated successfully.'})
+
 
 @app.route('/user')
 def user():
@@ -340,9 +351,14 @@ def user():
     track_ids = getUserTopTracks(token,0, 4)
     recs = getUserRecs(token, track_ids)
 
-    playlist_id = createPlaylists(token)
-    topTracksURIS = (getTopTrackURI(token, 1, 50))
-    addToPlaylist(token, topTracksURIS, playlist_id)
+
+
+    #Generate wrapped playlist
+    # playlist_id = createPlaylists(token)
+    # topTracksURIS = (getTopTrackURI(token, 1, 50))
+    # addToPlaylist(token, topTracksURIS, playlist_id)
+
+
     
     return render_template("dash.html",username = f"{user_info['display_name']}",
                            email = user_info['email'], playlists = json.dumps(getPlayLists(token)),

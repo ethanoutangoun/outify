@@ -47,26 +47,7 @@
           </div>
       </div>
 
-      <script>
-          // Connect to the WebSocket server
-          var socket = io.connect('http://' + document.domain + ':' + location.port);
-
-          // Receive and handle the 'current_song_update' event
-          socket.on('current_song_update', function(data) {
-              const playbackDiv = document.getElementById('playback-info');
-              if (Object.keys(data).length > 0) {
-                  // Update the HTML elements with the current song information
-                  playbackDiv.querySelector('img').src = data.album.images[0].url;
-                  playbackDiv.querySelector('h3').innerText = data.name;
-                  playbackDiv.querySelector('p').innerText = data.artists[0].name;
-              } else {
-                  // If no song is playing, show a default message
-                  playbackDiv.querySelector('img').src = ''; // Set a default image or hide the image
-                  playbackDiv.querySelector('h3').innerText = 'No song is currently playing.';
-                  playbackDiv.querySelector('p').innerText = '';
-              }
-          });
-      </script>
+      
 
 
 
@@ -248,9 +229,28 @@
                 -->
                 
 
-                <div>
+                <div id="createPlaylistButton">
+                  
                   <h2>Generate My 2023 Recap</h2>
-
+                  <script>
+                    // JavaScript code to trigger the Flask route on button click
+                    document.getElementById("createPlaylistButton").addEventListener("click", function() {
+                        // Perform an AJAX request to the Flask route
+                        var xhr = new XMLHttpRequest();
+                        xhr.open("GET", "/create_wrapped", true);
+                        xhr.onreadystatechange = function() {
+                            if (xhr.readyState === XMLHttpRequest.DONE) {
+                                if (xhr.status === 200) {
+                                    var response = JSON.parse(xhr.responseText);
+                                    alert(response.message);
+                                } else {
+                                    alert('Failed to create playlist. Please try again later.');
+                                }
+                            }
+                        };
+                        xhr.send();
+                    });
+                </script>
                 </div>
 
 
