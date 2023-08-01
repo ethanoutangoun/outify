@@ -29,7 +29,21 @@
 
 </div>
 
+<div id="mode-toggle">
+    <img src="/static/mode.png" onclick="toggleBackground()" width="50px" height="50px"/>
+
+    <script>
+        function toggleBackground() {
+        const particles = document.getElementById('particles-js');
+        particles.classList.toggle('dark-mode');
+        const modeButton = document.getElementById('mode-toggle')
+        modeButton.classList.toggle('dark-mode')
+    }
+    </script>
+</div>
+
 <div id="overlay">
+   
     <div class="title-image">
         <img src="/static/favicon.ico" width="70px" height="70px"/>
         <h1>utify</h1>
@@ -55,6 +69,8 @@
         </a>
 
     </div>
+
+  
     
     <div class="credits">
         <p>Created by Ethan Outangoun</p>
