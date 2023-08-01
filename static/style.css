@@ -119,7 +119,7 @@ h1{
 
 
 .spotify-btn{
-  padding-top: 50px;
+  padding-top: 90px;
 }
 
 
@@ -144,7 +144,7 @@ button{
 }
 
 
-p{
+.credits p{
   font-size: 18px;
   color: #6FE37A;
   padding-top: 100px;

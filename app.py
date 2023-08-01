@@ -62,9 +62,10 @@ def getPlayLists(token):
     result = get(url,headers=headers)
     json_result = json.loads(result.content)['items']
 
-    playlists = list(map(lambda x:[x['name'], x['images'][0]["url"]], json_result))
+    playlists = list(map(lambda x:[x['name'], x['images'][0]["url"], x['id']], json_result)) #parse into list of important values (name, image, id)
     
-  
+
+    
     return playlists
 
 
@@ -78,7 +79,6 @@ def getCurrentlyPlaying(token):
     
     #valid response
     if result.status_code == 200:
-    
         json_result = json.loads(result.content)['item']
         
         #Change the value of the index to control image size
@@ -200,17 +200,24 @@ def createPlaylists(token):
         print("NO")
 
     print(response.json()['id'])
+    print(response.json()['href'])
     return response.json()['id']
 
 
 
 def addToPlaylist(token, uris, playlist_id):
-    headers = get_auth_header(token)
-    url  = f"https://api.spotify.com/v1/playlists/2MotpRXG9uovtuduSwjYVo/tracks"
-    nurl = "'https://api.spotify.com/v1/playlists/2MotpRXG9uovtuduSwjYVo/tracks?uris=spotify%3Atrack%3A3nBGFgfRQ8ujSmu5cGlZIU'"
 
+
+ 
+    
+
+
+    headers = get_auth_header(token)
+
+    nurl = f'https://api.spotify.com/v1/playlists/{playlist_id}/tracks'
+  
     data = {
-        "uri": "string",
+        "uris": uris,
         "position" : 0
 
     }
@@ -333,9 +340,9 @@ def user():
     track_ids = getUserTopTracks(token,0, 4)
     recs = getUserRecs(token, track_ids)
 
-    #playlist_id = createPlaylists(token)
-    #topTracks = ",".join(getTopTrackURI(token, 1, 50))
-    #addToPlaylist(token, None, None)
+    playlist_id = createPlaylists(token)
+    topTracksURIS = (getTopTrackURI(token, 1, 50))
+    addToPlaylist(token, topTracksURIS, playlist_id)
     
     return render_template("dash.html",username = f"{user_info['display_name']}",
                            email = user_info['email'], playlists = json.dumps(getPlayLists(token)),
