@@ -16,7 +16,7 @@ app.secret_key = str(random.randint(0,10000000))
 client_id = os.getenv("SPOTIPY_CLIENT_ID")
 client_secret = os.getenv("SPOTIPY_CLIENT_SECRET")
 redirect_uri = os.getenv("SPOTIPY_REDIRECT_URI")
-scope = 'user-read-private user-top-read user-read-email playlist-read-private playlist-modify-private user-read-currently-playing user-read-playback-state streaming user-modify-playback-state'
+scope = 'user-read-private user-top-read user-read-email playlist-read-private playlist-modify-private user-read-currently-playing user-read-playback-state streaming user-modify-playback-state playlist-modify-public'
 
 
 #User functions
@@ -78,9 +78,11 @@ def getCurrentlyPlaying(token):
     
     #valid response
     if result.status_code == 200:
+    
         json_result = json.loads(result.content)['item']
         
         #Change the value of the index to control image size
+        
         image_url = json_result['album']['images'][1]['url']
 
         #Get list of contributing artist
@@ -197,7 +199,28 @@ def createPlaylists(token):
     else:
         print("NO")
 
+    print(response.json()['id'])
+    return response.json()['id']
 
+
+
+def addToPlaylist(token, uris, playlist_id):
+    headers = get_auth_header(token)
+    url  = f"https://api.spotify.com/v1/playlists/2MotpRXG9uovtuduSwjYVo/tracks"
+    nurl = "'https://api.spotify.com/v1/playlists/2MotpRXG9uovtuduSwjYVo/tracks?uris=spotify%3Atrack%3A3nBGFgfRQ8ujSmu5cGlZIU'"
+
+    data = {
+        "uri": "string",
+        "position" : 0
+
+    }
+
+    response = requests.post(nurl, headers=headers, json=data)
+
+    if response.status_code == 201:
+        print("Yay")
+    else:
+        print("NO")
 
 
 
@@ -310,8 +333,9 @@ def user():
     track_ids = getUserTopTracks(token,0, 4)
     recs = getUserRecs(token, track_ids)
 
-    #createPlaylists(token)
-   
+    #playlist_id = createPlaylists(token)
+    #topTracks = ",".join(getTopTrackURI(token, 1, 50))
+    #addToPlaylist(token, None, None)
     
     return render_template("dash.html",username = f"{user_info['display_name']}",
                            email = user_info['email'], playlists = json.dumps(getPlayLists(token)),
