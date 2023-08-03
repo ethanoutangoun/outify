@@ -1,4 +1,12 @@
 
+/*spacing*/
+body{
+    margin: 0;
+}
+
+h1{
+    margin: 0;
+}
 
 
 .song{
@@ -31,26 +39,53 @@
 .grid{
     display: grid;
     grid-template-columns: 400px 1fr;
+    
     height: 100%;
+    gap: 8px;
+    background-color: #cbf1cb;
   
 }
 
-.col{
+.col-1{
 
-    border-right: 1px solid black;
+
+    background-color: white;
+    padding: 15px;
+    border-radius: 10px;
+    margin-top: 7px;
+    margin-bottom: 7px;
+    margin-left: 7px;
 }
 
-.col:last-child{
+.col-2{
     border-right: none;
+ 
+    background-color: white;
+    padding: 15px;
+    border-radius: 10px;
+    margin-top: 7px;
+    margin-bottom: 7px;
+    margin-right: 7px;
 }
 
-/* This is to enable later when fully customizing spacing, now will leave it alone cause it looks better
-body{
-    margin: 0;
+
+
+
+
+
+#createPlaylistButton{
+    
+    border: 1px solid black;
+    width: 200px;
+    text-align: center;
+    font-weight: 200;
+    border-radius: 10px;
+
 }
 
-h1{
-    margin: 0;
+.home-group{
+    
 }
 
-*/
+
+
