@@ -45,37 +45,39 @@
 
            <!-- Your web app content -->
             <div class="playback" id="playback-info">
-              <script>
-                //Async function to update current song playing
+                <script>
+                  //Async function to update current song playing
+                  
+                  function updateCurrentSong() {
+                    fetch('/get_current_song')
+                      .then(response => response.json())
+                      .then(data => {
+                        const playbackDiv = document.getElementById('playback-info');
+                        if (Object.keys(data).length > 0) {
+                          // Update the HTML elements with the current song information
+                          playbackDiv.querySelector('img').src = data.album.images[0].url;
+                          playbackDiv.querySelector('h3').innerText = data.name;
+                          playbackDiv.querySelector('p').innerText = data.artists[0].name;
+                        } else {
+                          // If no song is playing, show a default message
+                          playbackDiv.querySelector('img').src = ''; // Set a default image or hide the image
+                          playbackDiv.querySelector('h3').innerText = 'No song is currently playing.';
+                          playbackDiv.querySelector('p').innerText = '';
+                        }
+                      })
+                      .catch(error => console.error('Error fetching current song:', error));
+                  }
                 
-                function updateCurrentSong() {
-                  fetch('/get_current_song')
-                    .then(response => response.json())
-                    .then(data => {
-                      const playbackDiv = document.getElementById('playback-info');
-                      if (Object.keys(data).length > 0) {
-                        // Update the HTML elements with the current song information
-                        playbackDiv.querySelector('img').src = data.album.images[0].url;
-                        playbackDiv.querySelector('h3').innerText = data.name;
-                        playbackDiv.querySelector('p').innerText = data.artists[0].name;
-                      } else {
-                        // If no song is playing, show a default message
-                        playbackDiv.querySelector('img').src = ''; // Set a default image or hide the image
-                        playbackDiv.querySelector('h3').innerText = 'No song is currently playing.';
-                        playbackDiv.querySelector('p').innerText = '';
-                      }
-                    })
-                    .catch(error => console.error('Error fetching current song:', error));
-                }
-              
-                // Refresh the current song information every 3 seconds
-                setInterval(updateCurrentSong, 3000);
-                
-            </script>
-              <img src="{{ playbackStatus[2] }}" width="75px" height="75px">
+                  // Refresh the current song information every 3 seconds
+                  setInterval(updateCurrentSong, 3000);
+                  
+              </script>
+
+
+              <img id="song-image" src="{{ playbackStatus[2] }}" width="75px" height="75px">
               <div>
-                  <h3>{{ playbackStatus[0] }}</h3>
-                  <p>{{ playbackStatus[1] }}</p>
+                  <h3 id="song-name">{{ playbackStatus[0] }}</h3>
+                  <p id="song-artist">{{ playbackStatus[1] }}</p>
               </div>
           </div>
 
